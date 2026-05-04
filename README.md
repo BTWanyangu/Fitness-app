@@ -33,58 +33,14 @@ The engine supports:
 5. Compare user pose against admin-approved reference media when reference landmarks exist.
 6. Return score, feedback, angle results, detected landmarks, and overlay coordinates.
 
-Your model file is already expected here:
 
-```text
-backend/trainova/pose_models/pose_landmarker.task
-```
 
-Environment path:
-
-```env
-MEDIAPIPE_POSE_MODEL_PATH=/app/trainova/pose_models/pose_landmarker.task
-```
-
-Check engine status after running:
-
-```text
-http://localhost:8000/api/pose/status/
-```
-
-If the model is missing or the image/video is unclear, the API still returns safe fallback coaching instead of crashing.
-
-## Demo credentials
-
-Seed command creates:
-
-```text
-Django Admin: http://localhost:8000/admin/
-Admin username: admin
-Admin password: admin12345
-
-Demo user email: alex@example.com
-Demo user password: password12345
-```
 
 ## Run with Docker
 
-From the project root:
-
-```bash
-cp .env.example .env
 
 docker compose down -v
 docker compose up --build
-```
-
-Open:
-
-```text
-Frontend: http://localhost:5173
-Backend health: http://localhost:8000/api/health/
-Pose status: http://localhost:8000/api/pose/status/
-Django Admin: http://localhost:8000/admin/
-```
 
 Docker notes:
 - The Postgres container is **not exposed on localhost:5432**, so it will not conflict with your local PostgreSQL.
@@ -117,58 +73,4 @@ npm run dev
 
 ## Environment
 
-Use this in `.env`:
-
-```env
-POSTGRES_DB=trainova
-POSTGRES_USER=trainova
-POSTGRES_PASSWORD=trainova
-DB_NAME=trainova
-DB_USER=trainova
-DB_PASSWORD=trainova
-DB_HOST=db
-DB_PORT=5432
-DJANGO_SECRET_KEY=replace-this-in-production
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:5173
-VITE_API_URL=http://localhost:8000/api
-VITE_MEDIA_URL=http://localhost:8000
-MEDIAPIPE_POSE_MODEL_PATH=/app/trainova/pose_models/pose_landmarker.task
-```
-
-## Small placeholders you may change
-
-1. Replace stock image URLs with local Kenyan fitness/gym/home workout images.
-2. Upload real correct-form reference images/videos in Django Admin.
-3. Add more `ExerciseAngleStandard` records per exercise for better scoring.
-4. Replace `DJANGO_SECRET_KEY` before any public deployment.
-5. Set `DJANGO_DEBUG=False` in production.
-6. Configure cloud storage for media if deploying publicly.
-7. Add email/SMS verification if launching for public users.
-
-## Main API endpoints
-
-```text
-POST /api/auth/register/
-POST /api/auth/login/
-GET  /api/auth/me/
-PATCH /api/auth/me/
-GET  /api/dashboard/
-GET  /api/exercises/
-POST /api/progress/
-POST /api/form-submissions/
-GET  /api/pose/status/
-```
-
-## Recommended admin workflow
-
-1. Log in to Django Admin.
-2. Add or edit exercises.
-3. Add angle standards for each exercise using MediaPipe landmark names, for example:
-   - `left_shoulder`, `left_elbow`, `left_wrist`
-   - `left_hip`, `left_knee`, `left_ankle`
-4. Upload correct reference media for exercises.
-5. User uploads image/video from Form Analysis page.
-6. API scores the upload and stores feedback in `FormSubmission`.
 
